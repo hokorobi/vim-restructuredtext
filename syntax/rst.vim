@@ -180,6 +180,10 @@ syn region rstCodeBlock contained matchgroup=rstDirective
       \ contains=@NoSpell
 syn cluster rstDirectives add=rstCodeBlock
 
+syn match rstBulletList `\v^\s*[-*+]\ze\s+`
+syn match rstEnumeratedList `\v\c^\s*%(\d+|[#a-z]|[imlcxvd]+)[.)]\ze\s+`
+syn match rstEnumeratedList `\v\c^\s*\(%(\d+|[#a-z]|[imlcxvd]+)\)\ze\s+`
+
 if !exists('g:rst_syntax_code_list')
     " A mapping from a Vim filetype to a list of alias patterns (pattern
     " branches to be specific, see ':help /pattern'). E.g. given:
@@ -252,7 +256,7 @@ syn sync minlines=50 linebreaks=2
 
 hi def link rstTodo                         Todo
 hi def link rstComment                      Comment
-hi def link rstSections                     Title
+hi def link rstSections                     Label
 hi def link rstTransition                   rstSections
 hi def link rstLiteralBlock                 String
 hi def link rstQuotedLiteralBlock           String
@@ -276,6 +280,8 @@ hi def link rstCitationReference            Identifier
 hi def link rstHyperLinkReference           Identifier
 hi def link rstStandaloneHyperlink          Identifier
 hi def link rstCodeBlock                    String
+hi def link rstBulletList                   Function
+hi def link rstEnumeratedList               Function
 if exists('g:rst_use_emphasis_colors')
     " TODO: Less arbitrary color selection
     hi def rstEmphasis          ctermfg=13 term=italic cterm=italic gui=italic
