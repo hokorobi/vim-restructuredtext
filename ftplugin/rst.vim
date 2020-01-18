@@ -43,5 +43,12 @@ if g:rst_fold_enabled != 0 && has('patch-7.3.867')  " Introduced the TextChanged
   augroup END
 endif
 
+" Add section line like riv.vim
+nnoremap <buffer> <Leader><Leader>1 0yyP0<C-v>$r=<ESC>
+nnoremap <buffer> <Leader><Leader>2 0yyp0<C-v>$r-<ESC>
+nnoremap <buffer> <Leader><Leader>3 0yyp0<C-v>$r~<ESC>
+nnoremap <buffer> <Leader><Leader>4 0yyp0<C-v>$r"<ESC>
+nnoremap <buffer> <Leader><Leader>5 0yyp0<C-v>$r'<ESC>
+nnoremap <buffer> <Leader><Leader>6 0yyp0<C-v>$r`<ESC>
 let &cpo = s:cpo_save
 unlet s:cpo_save
