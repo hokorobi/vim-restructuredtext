@@ -50,5 +50,11 @@ nnoremap <buffer> <Leader><Leader>3 0yyp0<C-v>$r~<ESC>
 nnoremap <buffer> <Leader><Leader>4 0yyp0<C-v>$r"<ESC>
 nnoremap <buffer> <Leader><Leader>5 0yyp0<C-v>$r'<ESC>
 nnoremap <buffer> <Leader><Leader>6 0yyp0<C-v>$r`<ESC>
+
+" Insert bullet
+inoremap <buffer> <C-CR> <C-o>:call rst#insertSameBullet()<CR>
+inoremap <buffer> <S-CR> <C-o>:call rst#insertChildBullet()<CR>
+inoremap <buffer> <C-S-CR> <C-o>:call rst#insertParentBullet()<CR>
+
 let &cpo = s:cpo_save
 unlet s:cpo_save
