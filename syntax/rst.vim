@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " Vim syntax file
 " Language: reStructuredText documentation format
 " Maintainer: Marshall Ward <marshall.ward@gmail.com>
@@ -5,7 +6,7 @@
 " Website: https://github.com/marshallward/vim-restructuredtext
 " Latest Revision: 2018-12-29
 
-if exists("b:current_syntax")
+if exists('b:current_syntax')
   finish
 endif
 
@@ -91,7 +92,7 @@ execute 'syn match rstSubstitutionDefinition contained' .
 
 function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_right)
   " Only escape the first char of a multichar delimiter (e.g. \* inside **)
-  if a:start[0] == '\'
+  if a:start[0] ==# '\'
     let first = a:start[0:1]
   else
     let first = a:start[0]
@@ -110,9 +111,9 @@ function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_righ
 endfunction
 
 function! s:DefineInlineMarkup(name, start, middle, end)
-  let middle = a:middle != "" ?
+  let middle = a:middle !=# '' ?
         \ (' skip=+\\\\\|\\' . a:middle . '\|\s' . a:middle . '+') :
-        \ ""
+        \ ''
 
   call s:DefineOneInlineMarkup(a:name, a:start, middle, a:end, "'", "'")
   call s:DefineOneInlineMarkup(a:name, a:start, middle, a:end, '"', '"')
@@ -136,7 +137,7 @@ endfunction
 call s:DefineInlineMarkup('Emphasis', '\*', '\*', '\*')
 call s:DefineInlineMarkup('StrongEmphasis', '\*\*', '\*', '\*\*')
 call s:DefineInlineMarkup('InterpretedTextOrHyperlinkReference', '`', '`', '`_\{0,2}')
-call s:DefineInlineMarkup('InlineLiteral', '``', "", '``')
+call s:DefineInlineMarkup('InlineLiteral', '``', '', '``')
 call s:DefineInlineMarkup('SubstitutionReference', '|', '|', '|_\{0,2}')
 call s:DefineInlineMarkup('InlineInternalTargets', '_`', '`', '`')
 
@@ -284,7 +285,7 @@ else
     hi def rstStrongEmphasis    term=bold cterm=bold gui=bold
 endif
 
-let b:current_syntax = "rst"
+let b:current_syntax = 'rst'
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
