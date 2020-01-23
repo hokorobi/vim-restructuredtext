@@ -44,7 +44,7 @@ if g:rst_fold_enabled != 0 && has('patch-7.3.867')  " Introduced the TextChanged
 endif
 
 " Add section line like riv.vim
-nnoremap <Plug>(rst-section1) 0yyP0<C-v>$r=<ESC>
+nnoremap <Plug>(rst-section1) 0yyp0<C-v>$r=<ESC>
 nnoremap <Plug>(rst-section2) 0yyp0<C-v>$r-<ESC>
 nnoremap <Plug>(rst-section3) 0yyp0<C-v>$r~<ESC>
 nnoremap <Plug>(rst-section4) 0yyp0<C-v>$r"<ESC>
