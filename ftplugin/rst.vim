@@ -44,17 +44,17 @@ if g:rst_fold_enabled != 0 && has('patch-7.3.867')  " Introduced the TextChanged
 endif
 
 " Add section line like riv.vim
-nnoremap <buffer> <Leader><Leader>1 0yyP0<C-v>$r=<ESC>
-nnoremap <buffer> <Leader><Leader>2 0yyp0<C-v>$r-<ESC>
-nnoremap <buffer> <Leader><Leader>3 0yyp0<C-v>$r~<ESC>
-nnoremap <buffer> <Leader><Leader>4 0yyp0<C-v>$r"<ESC>
-nnoremap <buffer> <Leader><Leader>5 0yyp0<C-v>$r'<ESC>
-nnoremap <buffer> <Leader><Leader>6 0yyp0<C-v>$r`<ESC>
+nnoremap <Plug>(rst-section1) 0yyP0<C-v>$r=<ESC>
+nnoremap <Plug>(rst-section2) 0yyp0<C-v>$r-<ESC>
+nnoremap <Plug>(rst-section3) 0yyp0<C-v>$r~<ESC>
+nnoremap <Plug>(rst-section4) 0yyp0<C-v>$r"<ESC>
+nnoremap <Plug>(rst-section5) 0yyp0<C-v>$r'<ESC>
+nnoremap <Plug>(rst-section6) 0yyp0<C-v>$r`<ESC>
 
 " Insert bullet
-inoremap <buffer> <C-CR> <C-o>:call rst#insertSameBullet()<CR>
-inoremap <buffer> <S-CR> <C-o>:call rst#insertChildBullet()<CR>
-inoremap <buffer> <C-S-CR> <C-o>:call rst#insertParentBullet()<CR>
+inoremap <Plug>(rst-insert-samebullet) <C-o>:call rst#insertSameBullet()<CR>
+inoremap <Plug>(rst-insert-childbullet) <C-o>:call rst#insertChildBullet()<CR>
+inoremap <Plug>(rst-insert-parentbullet) <C-o>:call rst#insertParentBullet()<CR>
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
