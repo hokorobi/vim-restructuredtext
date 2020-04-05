@@ -41,6 +41,18 @@ function! s:hasNumberedBullet(t) abort
   return a:t =~# '^\s*\%([0-9]\+\|[a-zA-Z#]\)\.\s'
 endfunction
 
+function! s:getRotateNewBullet(t, n, bullet, bullets) abort
+  let i = stridx(a:bullets, a:bullet)
+  if i + a:n > len(a:bullets) - 1
+    let j = (i + a:n) % len(a:bullets)
+  elseif i + a:n < 0
+    let j = (i + a:n + len(a:bullets))
+  else
+    let j = i + a:n
+  endif
+  return strpart(a:bullets, j, 1)
+endfunction
+
 function! s:rotateBullet(t, n) abort
   if a:t =~# '^\s*[0-9]\+\.\s'
     return a:t
@@ -48,15 +60,7 @@ function! s:rotateBullet(t, n) abort
 
   if s:hasBullet(a:t)
     let bullet = strpart(a:t, match(a:t, s:regexBullets), 1)
-    let i = stridx(s:bullets, bullet)
-    if i + a:n > len(s:bullets) - 1
-      let j = (i + a:n) % len(s:bullets)
-    elseif i + a:n < 0
-      let j = (i + a:n + len(s:bullets))
-    else
-      let j = i + a:n
-    endif
-    let newBullet = strpart(s:bullets, j, 1)
+    let newBullet = s:getRotateNewBullet(a:t, a:n, bullet, s:bullets)
     return substitute(a:t, bullet, newBullet, '')
   endif
 
@@ -68,17 +72,7 @@ function! s:rotateBullet(t, n) abort
   else
     let baseBullet = bullet
   endif
-
-  let numberedBullets = '#aA'
-  let i = stridx(numberedBullets, baseBullet)
-  if i + a:n > len(numberedBullets) - 1
-    let j = (i + a:n) % len(numberedBullets)
-  elseif i + a:n < 0
-    let j = (i + a:n + len(numberedBullets))
-  else
-    let j = i + a:n
-  endif
-  let newBullet = strpart(numberedBullets, j, 1)
+  let newBullet = s:getRotateNewBullet(a:t, a:n, baseBullet, '#aA')
   return substitute(a:t, bullet, newBullet, '')
 
 endfunction
