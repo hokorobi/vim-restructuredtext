@@ -32,7 +32,7 @@ function! s:getListHead(t) abort
   endif
 
   " a-zA-Z なら次のアルファベットを使用
-  let head = strpart(a:t, 0, matchend(a:t, '^\s*[a-zA-Z]\+\.\s'))
+  let head = strpart(a:t, 0, matchend(a:t, '^\s*[a-zA-Z]\.\s'))
   let bullet = strpart(head, match(head, '[a-zA-Z]'), 1)
   let newBullet = nr2char(char2nr(bullet) + 1)
   return substitute(head, bullet, newBullet, '')
