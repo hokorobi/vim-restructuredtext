@@ -8,6 +8,12 @@ function! s:isList(t) abort
   return a:t =~# '^\s*\%([0-9]\+\.\|[a-zA-Z#]\.\|' .. s:regexBullets .. '\)\s'
 endfunction
 
+function! s:getNumberedBullet(t) abort
+  let idxFirstNum = match(a:t, '[1-9]')
+  let listpostfixlen = 2
+  return strpart(a:t, idxFirstNum, matchend(a:t, '\.\s') - idxFirstNum - listpostfixlen)
+endfunction
+
 function! s:getListHead(t) abort
   " s:bullets, #. なら同じもの
   if s:hasBullet(a:t)
@@ -20,8 +26,7 @@ function! s:getListHead(t) abort
   " 数字なら次の数
   if a:t =~# '^\s*[0-9]\+\.\s'
     let head = strpart(a:t, 0, matchend(a:t, '^\s*[0-9]\+\.\s'))
-    let idxFirstNum = match(head, '[1-9]')
-    let bullet = strpart(head, idxFirstNum, matchend(head, '\.\s') - idxFirstNum -2)
+    let bullet = s:getNumberedBullet(a:t)
     let newBullet = bullet + 1
     return substitute(head, bullet, newBullet, '')
   endif
@@ -55,7 +60,8 @@ endfunction
 
 function! s:rotateBullet(t, n) abort
   if a:t =~# '^\s*[0-9]\+\.\s'
-    return a:t
+    let newBullet = s:getRotateNewBullet(a:t, a:n, '#', '#aA')
+    return substitute(a:t, s:getNumberedBullet(a:t), newBullet, '')
   endif
 
   if s:hasBullet(a:t)
