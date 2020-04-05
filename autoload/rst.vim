@@ -103,8 +103,8 @@ function! rst#insertChildBullet() abort
     " TODO: 改行する？
     return
   endif
-  call append('.', '  ' .. s:rotateBullet(s:getListHead(line), 1))
-  call cursor(line('.') + 1, col('.') + 4)
+  call append('.', ['', '  ' .. s:rotateBullet(s:getListHead(line), 1)])
+  call cursor(line('.') + 2, col('.') + 4)
 endfunction
 
 function! rst#insertParentBullet() abort
@@ -114,7 +114,7 @@ function! rst#insertParentBullet() abort
     " TODO: 改行する？
     return
   endif
-  call append('.', strpart(s:rotateBullet(s:getListHead(line), -1), 2))
-  call cursor(line('.') + 1, col('.'))
+  call append('.', ['', strpart(s:rotateBullet(s:getListHead(line), -1), 2)])
+  call cursor(line('.') + 2, col('.'))
 endfunction
 " }}}
