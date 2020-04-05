@@ -53,8 +53,8 @@ nnoremap <Plug>(rst-section6) 0yyp0<C-v>$r`<ESC>
 
 " Insert bullet
 inoremap <Plug>(rst-insert-samebullet) <C-o>:call rst#insertSameBullet()<CR>
-inoremap <Plug>(rst-insert-childbullet) <C-o>:call rst#insertChildBullet()<CR>
-inoremap <Plug>(rst-insert-parentbullet) <C-o>:call rst#insertParentBullet()<CR>
+inoremap <Plug>(rst-insert-childbullet) <C-o>:call rst#insertRotateBullet(1)<CR>
+inoremap <Plug>(rst-insert-parentbullet) <C-o>:call rst#insertRotateBullet(-1)<CR>
 
 let &cpo = s:cpo_save
 unlet s:cpo_save

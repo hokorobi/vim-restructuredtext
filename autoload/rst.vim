@@ -82,7 +82,6 @@ function! s:rotateBullet(t, n) abort
   endif
   let newBullet = s:getRotateNewBullet(a:t, a:n, baseBullet, '#aA')
   return substitute(a:t, bullet, newBullet, '')
-
 endfunction
 
 function! rst#insertSameBullet() abort
@@ -96,21 +95,20 @@ function! rst#insertSameBullet() abort
   call cursor(line('.') + 1, col('.') + 2)
 endfunction
 
-function! rst#insertChildBullet() abort
+function! rst#insertRotateBullet(n) abort
   let line = getline('.')
   if !s:isList(line)
     return
   endif
-  call append('.', ['', '  ' .. s:rotateBullet(s:getListHead(line), 1)])
-  call cursor(line('.') + 2, col('.') + 4)
-endfunction
+  if a:n > 0
+    let newLine = '  ' .. s:rotateBullet(s:getListHead(line), 1)
+    let newCol = col('.') + 4
+  else
+    let newLine = strpart(s:rotateBullet(s:getListHead(line), -1), 2)
+    let newCol = col('.')
+  endif
 
-function! rst#insertParentBullet() abort
-  let line = getline('.')
-  if !s:isList(line)
-    return
-  endif
-  call append('.', ['', strpart(s:rotateBullet(s:getListHead(line), -1), 2)])
-  call cursor(line('.') + 2, col('.'))
+  call append('.', ['', newLine])
+  call cursor(line('.') + 2, newCol)
 endfunction
 " }}}
