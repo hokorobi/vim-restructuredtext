@@ -1,6 +1,8 @@
 scriptencoding utf-8
 
 " Insert bullet {{{
+"TODO: 行の途中なら、それ以降の文字列を次の行に移動
+
 let s:bullets = '*+-'
 let s:regexBullets = '[' .. s:bullets .. ']'
 
@@ -85,10 +87,8 @@ endfunction
 
 function! rst#insertSameBullet() abort
   "TODO: bullet がない場合は bullet * を入力
-  "TODO: 行の途中なら、それ以降の文字列を次の行に移動
   let line = getline('.')
   if !s:isList(line)
-    " TODO: 改行する？
     return
   endif
 
@@ -97,10 +97,8 @@ function! rst#insertSameBullet() abort
 endfunction
 
 function! rst#insertChildBullet() abort
-  "TODO: 行の途中なら、それ以降の文字列を次の行に移動
   let line = getline('.')
   if !s:isList(line)
-    " TODO: 改行する？
     return
   endif
   call append('.', ['', '  ' .. s:rotateBullet(s:getListHead(line), 1)])
@@ -108,10 +106,8 @@ function! rst#insertChildBullet() abort
 endfunction
 
 function! rst#insertParentBullet() abort
-  "TODO: 行の途中なら、それ以降の文字列を次の行に移動
   let line = getline('.')
   if !s:isList(line)
-    " TODO: 改行する？
     return
   endif
   call append('.', ['', strpart(s:rotateBullet(s:getListHead(line), -1), 2)])
