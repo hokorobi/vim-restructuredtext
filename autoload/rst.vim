@@ -17,7 +17,7 @@ function! s:getListHead(t) abort
     return strpart(a:t, 0, matchend(a:t, '^\s*#\.\s'))
   endif
 
-  "数字なら次の数
+  " 数字なら次の数
   if a:t =~# '^\s*[0-9]\+\.\s'
     let head = strpart(a:t, 0, matchend(a:t, '^\s*[0-9]\+\.\s'))
     let idxFirstNum = match(head, '[1-9]')
@@ -26,8 +26,11 @@ function! s:getListHead(t) abort
     return substitute(head, bullet, newBullet, '')
   endif
 
-  "TODO: a-zA-Z なら次のアルファベットを使用
-  return strpart(a:t, 0, matchend(a:t, '^\s*[a-zA-Z]\.\s'))
+  " a-zA-Z なら次のアルファベットを使用
+  let head = strpart(a:t, 0, matchend(a:t, '^\s*[a-zA-Z]\+\.\s'))
+  let bullet = strpart(head, match(head, '[a-zA-Z]'), 1)
+  let newBullet = nr2char(char2nr(bullet) + 1)
+  return substitute(head, bullet, newBullet, '')
 endfunction
 
 function! s:hasBullet(t) abort
