@@ -5,9 +5,10 @@ scriptencoding utf-8
 
 let s:bullets = '*+-'
 let s:regexBullets = '[' .. s:bullets .. ']'
+let s:regexNumberBullets = '\%([0-9]\+\|[a-zA-Z#]\)\.'
 
 function! s:isList(t) abort
-  return a:t =~# '^\s*\%([0-9]\+\.\|[a-zA-Z#]\.\|' .. s:regexBullets .. '\)\s'
+  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s'
 endfunction
 
 function! s:getNumberedBullet(t) abort
@@ -45,7 +46,7 @@ function! s:hasBullet(t) abort
 endfunction
 
 function! s:hasNumberedBullet(t) abort
-  return a:t =~# '^\s*\%([0-9]\+\|[a-zA-Z#]\)\.\s'
+  return a:t =~# '^\s*' .. s:regexNumberBullets .. '\s'
 endfunction
 
 function! s:getRotateNewBullet(t, n, bullet, bullets) abort
