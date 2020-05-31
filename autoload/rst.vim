@@ -7,8 +7,9 @@ let s:bullets = '*+-'
 let s:regexBullets = '[' .. s:bullets .. ']'
 let s:regexNumberBullets = '\%([0-9]\+\|[a-zA-Z#]\)\.'
 
+" List: *, +, -, |, [0-9]., [a-z]., [A-Z]., #.
 function! s:isList(t) abort
-  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s'
+  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\||\)\s'
 endfunction
 
 function! s:getNumberedBullet(t) abort
@@ -18,12 +19,12 @@ function! s:getNumberedBullet(t) abort
 endfunction
 
 function! s:getListHead(t) abort
-  " s:bullets, #. なら同じもの
+  " s:bullets, #. , | なら同じもの
   if s:hasBullet(a:t)
     return strpart(a:t, 0, matchend(a:t, '^\s*' .. s:regexBullets .. '\s'))
   endif
-  if a:t =~# '^\s*#\.\s'
-    return strpart(a:t, 0, matchend(a:t, '^\s*#\.\s'))
+  if a:t =~# '^\s*\%(#\.\||\)\s'
+    return strpart(a:t, 0, matchend(a:t, '^\s*\%(#\.\||\)\s'))
   endif
 
   " 数字なら次の数
@@ -34,7 +35,7 @@ function! s:getListHead(t) abort
     return substitute(head, bullet, newBullet, '')
   endif
 
-  " a-zA-Z なら次のアルファベットを使用
+  " a-zA-Z なら次のアルファベット
   let head = strpart(a:t, 0, matchend(a:t, '^\s*[a-zA-Z]\.\s'))
   let bullet = strpart(head, match(head, '[a-zA-Z]'), 1)
   let newBullet = nr2char(char2nr(bullet) + 1)
@@ -43,10 +44,6 @@ endfunction
 
 function! s:hasBullet(t) abort
   return a:t =~# '^\s*' .. s:regexBullets .. '\s'
-endfunction
-
-function! s:hasNumberedBullet(t) abort
-  return a:t =~# '^\s*' .. s:regexNumberBullets .. '\s'
 endfunction
 
 function! s:getRotateNewBullet(t, n, bullet, bullets) abort
