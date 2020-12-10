@@ -83,9 +83,12 @@ function! s:rotateBullet(t, n) abort
 endfunction
 
 function! rst#insertSameBullet() abort
-  "TODO: bullet がない場合は bullet * を入力
   let line = getline('.')
   if !s:isList(line)
+    let l:bullet = '* '
+    let l:indent = indent('.')
+    call setline('.', strpart(line, 0, l:indent) .. l:bullet .. strpart(line, l:indent))
+    call cursor(0, col('.') + strlen(l:bullet))
     return
   endif
 
