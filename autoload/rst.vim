@@ -84,16 +84,16 @@ endfunction
 
 function! rst#insertSameBullet() abort
   let line = getline('.')
-  if !s:isList(line)
-    let l:bullet = '* '
-    let l:indent = indent('.')
-    call setline('.', strpart(line, 0, l:indent) .. l:bullet .. strpart(line, l:indent))
-    call cursor(0, col('.') + strlen(l:bullet))
+  if s:isList(line)
+    call append('.', s:getListHead(line))
+    call cursor(line('.') + 1, col('.') + 2)
     return
   endif
 
-  call append('.', s:getListHead(line))
-  call cursor(line('.') + 1, col('.') + 2)
+  let l:bullet = '* '
+  let l:indent = indent('.')
+  call setline('.', strpart(line, 0, l:indent) .. l:bullet .. strpart(line, l:indent))
+  call cursor(0, col('.') + strlen(l:bullet))
 endfunction
 
 function! rst#insertRotateBullet(n) abort
