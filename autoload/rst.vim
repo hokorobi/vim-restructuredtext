@@ -8,8 +8,23 @@ let s:regexBullets = '[' .. s:bullets .. ']'
 let s:regexNumberBullets = '\%([0-9]\+\|[a-zA-Z#]\)\.'
 
 " List: *, +, -, |, [0-9]., [a-z]., [A-Z]., #.
-function! s:isList(t) abort
+function! s:isListOrLB(t) abort
   return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\||\)\s'
+endfunction
+
+" Ex: | hoge
+function! s:isLineBlock(t) abort
+  return a:t =~# '^\s*|\s'
+endfunction
+
+" Ex: * hoge
+function! s:isListNoneLB(t) abort
+  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
+endfunction
+
+" Ex: * | hoge
+function! s:isListWithLineBlock(t) abort
+  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s|'
 endfunction
 
 function! s:getNumberedBullet(t) abort
@@ -82,9 +97,39 @@ function! s:rotateBullet(t, n) abort
   return substitute(a:t, bullet, newBullet, '')
 endfunction
 
+function! rst#insertLineBlock() abort
+  let line = getline('.')
+  if s:isLineBlock(line)
+    let l:lbpos = stridx(line, '|')
+    call append('.', repeat(' ', l:lbpos) .. '| ')
+    call cursor(line('.') + 1, col('.') + 2)
+    return
+  endif
+
+  if s:isListNoneLB(line)
+    let l:lbpos = strlen(s:getListHead(line))
+    let l:lb = '| '
+    call setline('.', strpart(line, 0, l:lbpos) .. l:lb .. strpart(line, l:lbpos))
+    return
+  endif
+
+  if s:isListWithLineBlock(line)
+    let l:lbpos = stridx(line, '|')
+    " FIXME: Support the use of tabs for indentation
+    call append('.', repeat(' ', l:lbpos) .. '| ')
+    call cursor(line('.') + 1, col('.') + 2)
+    return
+  endif
+
+  let l:lb = '| '
+  let l:indent = indent('.')
+  call setline('.', strpart(line, 0, l:indent) .. l:lb .. strpart(line, l:indent))
+  call cursor(0, col('.') + strlen(l:lb))
+endfunction
+
 function! rst#insertSameBullet() abort
   let line = getline('.')
-  if s:isList(line)
+  if s:isListOrLB(line)
     call append('.', s:getListHead(line))
     call cursor(line('.') + 1, col('.') + 2)
     return
@@ -98,7 +143,7 @@ endfunction
 
 function! rst#insertRotateBullet(n) abort
   let line = getline('.')
-  if !s:isList(line)
+  if !s:isListOrLB(line)
     return
   endif
   if a:n > 0
