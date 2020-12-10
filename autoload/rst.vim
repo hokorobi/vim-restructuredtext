@@ -8,23 +8,8 @@ let s:regexBullets = '[' .. s:bullets .. ']'
 let s:regexNumberBullets = '\%([0-9]\+\|[a-zA-Z#]\)\.'
 
 " List: *, +, -, |, [0-9]., [a-z]., [A-Z]., #.
-function! s:isListOrLB(t) abort
+function! s:isList(t) abort
   return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\||\)\s'
-endfunction
-
-" Ex: | hoge
-function! s:isLineBlock(t) abort
-  return a:t =~# '^\s*|\s'
-endfunction
-
-" Ex: * hoge
-function! s:isListNoneLB(t) abort
-  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
-endfunction
-
-" Ex: * | hoge
-function! s:isListWithLineBlock(t) abort
-  return a:t =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s|'
 endfunction
 
 function! s:getNumberedBullet(t) abort
@@ -99,37 +84,48 @@ endfunction
 
 function! rst#insertLineBlock() abort
   let line = getline('.')
-  if s:isLineBlock(line)
+
+  " * | hoge -> * | hoge
+  "               |
+  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s|'
     let l:lbpos = stridx(line, '|')
+    " FIXME: Support the use of tabs for indentation
     call append('.', repeat(' ', l:lbpos) .. '| ')
+    " TODO: end to line
     call cursor(line('.') + 1, col('.') + 2)
     return
   endif
 
-  if s:isListNoneLB(line)
-    let l:lbpos = strlen(s:getListHead(line))
-    let l:lb = '| '
-    call setline('.', strpart(line, 0, l:lbpos) .. l:lb .. strpart(line, l:lbpos))
-    return
-  endif
-
-  if s:isListWithLineBlock(line)
+  " | hoge -> | hoge
+  "           |
+  if line =~# '^\s*|\s'
     let l:lbpos = stridx(line, '|')
-    " FIXME: Support the use of tabs for indentation
     call append('.', repeat(' ', l:lbpos) .. '| ')
+    " TODO: end to line
     call cursor(line('.') + 1, col('.') + 2)
     return
   endif
 
   let l:lb = '| '
-  let l:indent = indent('.')
-  call setline('.', strpart(line, 0, l:indent) .. l:lb .. strpart(line, l:indent))
-  call cursor(0, col('.') + strlen(l:lb))
+
+  " * hoge -> * | hoge
+  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
+    call s:insertstr(line, l:lb, strlen(s:getListHead(line)))
+    return
+  endif
+
+  " hoge -> | hoge
+  call s:insertstr(line, l:lb, indent('.'))
+endfunction
+
+function! s:insertstr(str, addstr, pos) abort
+  call setline('.', strpart(a:str, 0, a:pos) .. a:addstr .. strpart(a:str, a:pos))
+  call cursor(0, col('.') + strlen(a:addstr))
 endfunction
 
 function! rst#insertSameBullet() abort
   let line = getline('.')
-  if s:isListOrLB(line)
+  if s:isList(line)
     call append('.', s:getListHead(line))
     call cursor(line('.') + 1, col('.') + 2)
     return
@@ -143,7 +139,7 @@ endfunction
 
 function! rst#insertRotateBullet(n) abort
   let line = getline('.')
-  if !s:isListOrLB(line)
+  if !s:isList(line)
     return
   endif
   if a:n > 0
