@@ -82,42 +82,6 @@ function! s:rotateBullet(t, n) abort
   return substitute(a:t, bullet, newBullet, '')
 endfunction
 
-function! rst#insertLineBlock() abort
-  let line = getline('.')
-
-  " * | hoge -> * | hoge
-  "               |
-  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s|'
-    let l:lbpos = stridx(line, '|')
-    " FIXME: Support the use of tabs for indentation
-    call append('.', repeat(' ', l:lbpos) .. '| ')
-    " TODO: end to line
-    call cursor(line('.') + 1, col('.') + 2)
-    return
-  endif
-
-  " | hoge -> | hoge
-  "           |
-  if line =~# '^\s*|\s'
-    let l:lbpos = stridx(line, '|')
-    call append('.', repeat(' ', l:lbpos) .. '| ')
-    " TODO: end to line
-    call cursor(line('.') + 1, col('.') + 2)
-    return
-  endif
-
-  let l:lb = '| '
-
-  " * hoge -> * | hoge
-  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
-    call s:insertstr(line, l:lb, strlen(s:getListHead(line)))
-    return
-  endif
-
-  " hoge -> | hoge
-  call s:insertstr(line, l:lb, indent('.'))
-endfunction
-
 function! s:insertstr(str, addstr, pos) abort
   call setline('.', strpart(a:str, 0, a:pos) .. a:addstr .. strpart(a:str, a:pos))
   call cursor(0, col('.') + strlen(a:addstr))
@@ -164,3 +128,40 @@ function! rst#insertRotateBullet(n) abort
   call cursor(line('.') + 2, newCol)
 endfunction
 " }}}
+
+" Insert line block {{{
+function! rst#insertLineBlock() abort
+  let line = getline('.')
+
+  " * | hoge -> * | hoge
+  "               |
+  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s|'
+    let l:lbpos = stridx(line, '|')
+    " FIXME: Support the use of tabs for indentation
+    call append('.', repeat(' ', l:lbpos) .. '| ')
+    " TODO: end to line
+    call cursor(line('.') + 1, col('.') + 2)
+    return
+  endif
+
+  " | hoge -> | hoge
+  "           |
+  if line =~# '^\s*|\s'
+    let l:lbpos = stridx(line, '|')
+    call append('.', repeat(' ', l:lbpos) .. '| ')
+    " TODO: end to line
+    call cursor(line('.') + 1, col('.') + 2)
+    return
+  endif
+
+  let l:lb = '| '
+
+  " * hoge -> * | hoge
+  if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
+    call s:insertstr(line, l:lb, strlen(s:getListHead(line)))
+    return
+  endif
+
+  " hoge -> | hoge
+  call s:insertstr(line, l:lb, indent('.'))
+endfunction
