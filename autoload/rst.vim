@@ -155,11 +155,17 @@ function! rst#insertLineBlock() abort
   let l:lb = '| '
 
   " * hoge -> * | hoge
+  "             |
   if line =~# '^\s*\%(' .. s:regexNumberBullets .. '\|' .. s:regexBullets .. '\)\s[^|]'
     call s:insertstr(line, l:lb, strlen(s:getListHead(line)))
+    call append('.', repeat(' ', indent('.') + 2) .. '| ')
+    call cursor(line('.') + 1, col('$'))
     return
   endif
 
   " hoge -> | hoge
+  "         |
   call s:insertstr(line, l:lb, indent('.'))
+  call append('.', repeat(' ', indent('.')) .. '| ')
+  call cursor(line('.') + 1, col('$'))
 endfunction
