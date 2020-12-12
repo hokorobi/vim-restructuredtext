@@ -125,7 +125,7 @@ function! rst#insertRotateBullet(n) abort
   endif
 
   call append('.', ['', newLine])
-  call cursor(line('.') + 2, col('$'))
+  call cursor(line('.') + 2, col('$') + 2)
 endfunction
 " }}}
 
