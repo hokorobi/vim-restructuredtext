@@ -84,7 +84,7 @@ endfunction
 
 function! s:insertstr(str, addstr, pos) abort
   call setline('.', strpart(a:str, 0, a:pos) .. a:addstr .. strpart(a:str, a:pos))
-  call cursor(0, col('.') + strlen(a:addstr))
+  call cursor(0, col('$'))
 endfunction
 
 " * hoge -> * hoge
@@ -96,14 +96,14 @@ function! rst#insertSameBullet() abort
   let line = getline('.')
   if s:isList(line)
     call append('.', s:getListHead(line))
-    call cursor(line('.') + 1, col('.') + 2)
+    call cursor(line('.') + 1, col('$'))
     return
   endif
 
   let l:bullet = '* '
   let l:indent = indent('.')
   call setline('.', strpart(line, 0, l:indent) .. l:bullet .. strpart(line, l:indent))
-  call cursor(0, col('.') + strlen(l:bullet))
+  call cursor(0, col('$'))
 endfunction
 
 " * hoge -> * hoge
@@ -118,14 +118,12 @@ function! rst#insertRotateBullet(n) abort
   endif
   if a:n > 0
     let newLine = '  ' .. s:rotateBullet(s:getListHead(line), 1)
-    let newCol = col('.') + 4
   else
     let newLine = strpart(s:rotateBullet(s:getListHead(line), -1), 2)
-    let newCol = col('.')
   endif
 
   call append('.', ['', newLine])
-  call cursor(line('.') + 2, newCol)
+  call cursor(line('.') + 2, col('$'))
 endfunction
 " }}}
 
@@ -139,8 +137,7 @@ function! rst#insertLineBlock() abort
     let l:lbpos = stridx(line, '|')
     " FIXME: Support the use of tabs for indentation
     call append('.', repeat(' ', l:lbpos) .. '| ')
-    " TODO: end to line
-    call cursor(line('.') + 1, col('.') + 2)
+    call cursor(line('.') + 1, col('$'))
     return
   endif
 
@@ -149,8 +146,7 @@ function! rst#insertLineBlock() abort
   if line =~# '^\s*|\s'
     let l:lbpos = stridx(line, '|')
     call append('.', repeat(' ', l:lbpos) .. '| ')
-    " TODO: end to line
-    call cursor(line('.') + 1, col('.') + 2)
+    call cursor(line('.') + 1, col('$'))
     return
   endif
 
