@@ -123,6 +123,11 @@ function! s:insertstr(str, addstr, pos) abort
   call cursor(0, col('.') + strlen(a:addstr))
 endfunction
 
+" * hoge -> * hoge
+"           *
+" or
+" 1. hoge -> 1. hoge
+"            2.
 function! rst#insertSameBullet() abort
   let line = getline('.')
   if s:isList(line)
@@ -137,6 +142,11 @@ function! rst#insertSameBullet() abort
   call cursor(0, col('.') + strlen(l:bullet))
 endfunction
 
+" * hoge -> * hoge
+"               +
+" or
+"   + hoge ->   + hoge
+"             *
 function! rst#insertRotateBullet(n) abort
   let line = getline('.')
   if !s:isList(line)
