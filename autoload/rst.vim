@@ -107,9 +107,11 @@ function! rst#insertSameBullet() abort
 endfunction
 
 " * hoge -> * hoge
+"
 "               +
 " or
 "   + hoge ->   + hoge
+"
 "             *
 function! rst#insertRotateBullet(n) abort
   let line = getline('.')
