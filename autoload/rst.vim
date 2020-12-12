@@ -108,7 +108,7 @@ endfunction
 
 " * hoge -> * hoge
 "
-"               +
+"             +
 " or
 "   + hoge ->   + hoge
 "
